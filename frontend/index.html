@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成AI比較ビューア（Gemini / Groq / Hugging Face）</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+ <header class="page-header">
+     <h1>生成AI比較ビューア</h1> 
+     <p>1つの質問に対して、Gemini / Groq / OpenAI の応答を横並びで比較します。</p> 
+    </header> <main class="container">
+         <section class="input-block">
+             <label for="prompt">質問（プロンプト）</label>
+              <textarea id="prompt" rows="5" placeholder="ここに質問を入力してください。"></textarea>
+              
+              <div class="options-row">
+                <button id="askBtn" class="primary">送信</button>
+                 <div class="option">
+
+                     <label for="temperature">温度（0.0〜1.0）</label> 
+                     <input id="temperature" type="number" step="0.1" min="0" max="1" value="0.7" />
+                </div> 
+                <div class="option"> 
+                  <label for="maxTokens">最大トークン</label>
+                   <!-- <input id="maxTokens" type="number" min="10" max="2048" value="512" /> -->
+                  <select id="maxTokens">
+                    <!-- <option value="256">256</option> -->
+                    <option value="526">526</option>
+                    <option value="1024">1024</option>
+                    <option value="2048">2048</option>
+                  </select>
+                </div> 
+
+              </div>
+              <div id="statusLine" class="status-line">準備完了</div> </section>
+    <section id="cardsWrapper" class="cards-wrapper">
+ 
+<!-- Gemini card -->
+ <article id="card-gemini" class="card card-gemini" data-model="gemini">
+   <header class="card-header">
+    <div class="card-title">
+      <span class="model-name">Gemini</span>
+      <span class="badge badge-id">gemini</span>
+      <span class="badge badge-status" id="status-gemini">idle</span>
+      </div>
+      <div class="card-actions">
+      <!-- <button class="btn btn-copy" data-model="gemini">コピー</button>
+      <button class="btn btn-retry" data-model="gemini">再実行</button> -->
+     </div>
+    </header>
+    <div class="card-meta">
+    <span class="timestamp" id="time-gemini">-</span>
+    <span class="duration" id="duration-gemini">- ms</span>
+    <!-- <span class="usage" id="usage-gemini">tokens: -</span> -->
+    </div>
+    <div class="card-body">
+    <pre class="response-text" id="text-gemini"></pre>
+    <div class="error-text" id="error-gemini"></div>
+
+   <!-- リアクションボタン -->
+    <div class="reaction-buttons">
+      <button id="btn-gemini-like">❤️</button>
+      <span id="count-gemini-like">0</span>
+      <button id="btn-gemini-good">👍</button>
+      <span id="count-gemini-good">0</span>
+      <button id="btn-gemini-meh">😒</button>
+      <span id="count-gemini-meh">0</span>
+    </div>
+   </div>
+  </article>
+
+  <!-- Groq card -->
+  <article id="card-groq" class="card card-groq" data-model="groq">
+   <header class="card-header">
+    <div class="card-title">
+     <span class="model-name">Groq (Llama3)</span>
+      <span class="badge badge-id">groq</span>
+      <span class="badge badge-status" id="status-groq">idle</span>
+    </div>
+    <div class="card-actions">
+     <!-- <button class="btn btn-copy" data-model="groq">コピー</button>
+     <button class="btn btn-retry" data-model="groq">再実行</button> -->
+    </div>
+   </header>
+   <div class="card-meta">
+      <span class="timestamp" id="time-groq">-</span>
+     <span class="duration" id="duration-groq">- ms</span>
+     <!-- <span class="usage" id="usage-groq">tokens: -</span> -->
+   </div> 
+   <div class="card-body">
+     <pre class="response-text" id="text-groq"></pre>
+     <div class="error-text" id="error-groq"></div>
+   
+       <!-- リアクションボタン -->
+    <div class="reaction-buttons">
+     <button id="btn-groq-like">❤️</button>
+     <span id="count-groq-like">0</span>
+     <button id="btn-groq-good">👍</button>
+     <span id="count-groq-good">0</span>
+     <button id="btn-groq-meh">😒</button>
+     <span id="count-groq-meh">0</span>
+    </div>
+   
+    </div>
+  </article>
+
+<!-- OpenAI card -->
+<article id="card-openai" class="card card-openai" data-model="openai">
+  <header class="card-header">
+    <div class="card-title">
+      <span class="model-name">OpenAI (GPT-3.5/GPT-4)</span>
+      <span class="badge badge-id">openai</span>
+      <span class="badge badge-status" id="status-openai">idle</span>
+    </div>
+    <div class="card-actions">
+      <!-- <button class="btn btn-copy" data-model="openai">コピー</button>
+      <button class="btn btn-retry" data-model="openai">再実行</button> -->
+    </div>
+  </header>
+  <div class="card-meta">
+    <span class="timestamp" id="time-openai">-</span>
+    <span class="duration" id="duration-openai">- ms</span>
+    <!-- <span class="usage" id="usage-openai">tokens: -</span> -->
+  </div>
+  <div class="card-body">
+    <pre class="response-text" id="text-openai"></pre>
+    <div class="error-text" id="error-openai"></div>
+
+      <!-- リアクションボタン -->
+  <div class="reaction-buttons">
+    <button id="btn-openai-like">❤️</button>
+    <span id="count-openai-like">0</span>
+    <button id="btn-openai-good">👍</button>
+    <span id="count-openai-good">0</span>
+    <button id="btn-openai-meh">😒</button>
+    <span id="count-openai-meh">0</span>
+  </div>
+
+
+  </div>
+</article>
+</section>
+
+</main>
+<footer class="page-footer"> <small></small> </footer>
+
+<!-- jQuery CDN --> 
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+ <!-- Day.js CDN --> 
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>     
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<!-- Firebase SDKをCDNから読み込み -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } 
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+
+    authDomain: "ai-app-5f4e7.firebaseapp.com",
+    projectId: "ai-app-5f4e7",
+    storageBucket: "ai-app-5f4e7.firebasestorage.app",
+    messagingSenderId: "1051868597930",
+    appId: "1:1051868597930:web:fd83683d6d7a836428cad3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // グローバルに公開
+  window.db = db;
+  window.docFn = doc;          // ← 名前を変える
+  window.getDocFn = getDoc;
+  window.setDocFn = setDoc;
+  window.onSnapshotFn = onSnapshot;
+
+
+  // 疎通確認
+  async function testFirestore() {
+    const ref = doc(db, "testCollection", "testDoc");
+    await setDoc(ref, { hello: "world" });
+    const snap = await getDoc(ref);
+    console.log("Firestore疎通確認:", snap.data());
+  }
+  testFirestore();
+</script>
+
+<script src="./script.js"></script>
+
+</body>
+</html>
