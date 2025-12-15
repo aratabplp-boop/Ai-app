@@ -7,6 +7,7 @@
 
 
 ## 3. アプリのデプロイURL
+- https://aratabplp-boop.github.io/Ai-app/
 
 ## 4. ログインID＆パスワード
 -　なし
@@ -22,3 +23,7 @@
 - Gemini-proは思考にトークンを大量消費するため、接続を断念
 - 彼らの反応は、毎日違う傾向がある…気がする
 - 生成AIとのAPI疎通のために図らずもバックエンドを作ることになってしまった。よくわかってない・・。
+
+![スクショ1](./frontend/img/selfintroduce.png "各AIの自己紹介")
+
+![スクショ２](./frontend/img/nigate.png "各AIのニガテなもの")
